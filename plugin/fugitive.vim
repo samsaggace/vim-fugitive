@@ -206,6 +206,15 @@ function! fugitive#detect(path) abort
         call buffer.setvar('&tags', escape(b:git_dir.'/'.&filetype.'.tags', ', ').','.buffer.getvar('&tags'))
       endif
     endif
+    if has("cscope")
+        if filereadable(b:git_dir.'/cscope.out')
+            let g:cscope_database =  b:git_dir . '/cscope.out'
+            execute 'cs add ' . b:git_dir . '/cscope.out'
+        elseif filereadable("cscope.out")
+            let g:cscope_database =  "cscope.out"
+            cs add cscope.out
+        endif
+    endif 
     try
       let [save_mls, &modelines] = [&mls, 0]
       call s:define_commands()
